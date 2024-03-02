@@ -28,8 +28,6 @@ COPY --from=builder /app/target/*.jar app.jar
 # Command to run the application when the container starts
 CMD ["java", "-jar", "app.jar"]
 
-# Expose the port your app runs on
-EXPOSE 8080
 
 # FROM maven:3.8.5-openjdk-17 AS build
 # COPY . .
