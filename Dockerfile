@@ -1,38 +1,32 @@
-# Use Maven wrapper to build the project
-FROM maven:3.8.4-openjdk-17 AS builder
+# Use OpenJDK 17 as the base image
+FROM openjdk:17 AS builder
+
+# Set the working directory inside the container
 WORKDIR /app
 
-# Copy the Maven wrapper files
-COPY mvnw .
-COPY .mvn .mvn
+# Copy the source code into the container
+COPY src /app/src
+COPY pom.xml /app
 
-# Copy the Maven project description files
-COPY pom.xml .
+# Build the JAR file using Maven
+RUN ./mvnw clean package
 
-# Resolve Maven dependencies
-RUN ./mvnw dependency:go-offline
+# Use a lightweight OpenJDK 17 image for the final runtime image
+FROM openjdk:17-slim
 
-# Copy application source code
-COPY src src
-
-# Build the application
-RUN ./mvnw package -DskipTests
-
-# Final stage: Create the JAR file
-FROM openjdk:17 AS final
+# Set the working directory inside the container
 WORKDIR /app
 
-# Copy the JAR file from the builder stage
-COPY --from=builder /app/target/*.jar app.jar
+# Copy the JAR file from the builder stage to the runtime image
+COPY --from=builder /app/target/*.jar /app/demo.jar
 
-# Command to run the application when the container starts
-CMD ["java", "-jar", "app.jar"]
+# Specify the command to run the JAR file
+CMD ["java", "-jar", "demo.jar"]
+
+# Expose port 8080
+EXPOSE 8080
 
 
-# FROM maven:3.8.5-openjdk-17 AS build
-# COPY . .
-# RUN mvn clean package -DskipTests
-# FROM openjdk:17-slim
 # COPY --from=build /target/demo-0.0.1-SNAPSHOT.jar demo.jar 
 # EXPOSE 8080
 # ENTRYPOINT ["java","-jar","demo.jar"]
