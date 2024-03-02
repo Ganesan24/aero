@@ -9,7 +9,7 @@ COPY src /app/src
 COPY pom.xml /app
 
 # Build the JAR file using Maven
-RUN ./mvnw clean package
+#RUN ./mvnw clean package
 
 # Use a lightweight OpenJDK 17 image for the final runtime image
 FROM openjdk:17-slim
