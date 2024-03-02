@@ -2,12 +2,12 @@
 FROM openjdk:17 AS builder
 
 # Set the working directory inside the container
-WORKDIR /app
+WORKDIR /Main
 
 # Copy the Maven Wrapper script and the project configuration files
-COPY mvnw .
-COPY mvnw.cmd .
-COPY .mvn .mvn
+# COPY mvnw .
+# COPY mvnw.cmd .
+# COPY .mvn .mvn
 COPY pom.xml .
 
 # Copy the project source code
